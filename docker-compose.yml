@@ -1,10 +1,35 @@
-version: '3'
+version: '3.6'
+
 services:
+
   superset:
     build:
       context: .
       args:
-        SUPERSET_VERSION: 0.27.0
+        SUPERSET_VERSION: 0.26.3
     image: amancevice/superset
     ports:
-      - 8088:8088
+      - 6161:8088
+    # depends_on:
+      # - db
+    networks:
+      - sister
+      
+  # db:
+    # image: mysql:5.7
+    # restart: always
+    # env_file:
+      # - .env
+    # # ports:
+      # # - "6022:3306"
+    # volumes:
+      # - ../data/supersetdata/mysqldata/:/var/lib/mysql/
+    # networks:
+      # - sister
+ 
+ 
+networks:
+  sister:
+    name: sister
+      external:true
+           
