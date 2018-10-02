@@ -25,8 +25,12 @@ echo "Sleeping for 30s"
 timeout1=33 ; read -t "${timeout1}" -p "Press ENTER or wait $timeout1 seconds..." || true ;  echo ;
 
 
-# Inititalize Demo
+# Inititalize or Demo
 # docker-compose exec superset superset-demo
+#   or
+# docker-compose exec superset superset-init
+#	
+#
 if [ -f .demoinitialized ]; then
     #file exists, so don't run this again. exit.
     echo

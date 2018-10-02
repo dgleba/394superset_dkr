@@ -3,7 +3,7 @@
 # run scripts from project folder like this --  sc/cl
 
 
-ss:
+sst:
 	bash start.sh
 
 sush:
@@ -19,18 +19,51 @@ kl:
 adm:
 	docker-compose up adminer
  
+demo:
+	docker-compose exec superset superset-demo
+
+init:
+	docker-compose exec superset superset-init
  
-# clean docker containers 
+ 
+# clean superst docker containers.. 
 #
-clean2:   
+cleanc:   
 	# remove this one.. 
-	#-docker rmi dkr382django2t_djangodev 
 	#-docker rmi dkr382r-django_djangodev
 	#
   #kill these...
 	# docker kill $$(docker ps -a |    grep 394super         | awk '{print $$1}')
 	#remove these...
-	-docker rm -f $$(docker ps -a |  grep full     | awk '{print $$1}')
+	-docker rm -f $$(docker ps -a |  grep 394sup     | awk '{print $$1}')
+	#
+	# -docker images | grep redis | awk '{print $$1 ":" $$2}' | xargs docker rmi 
+	# -docker images | grep superset | awk '{print $$1 ":" $$2}' | xargs docker rmi 
+ 	#
+	# remove tagged <none> 
+	-docker rmi $$(docker images | grep "^<none>" | awk '{ print $$3 }') 
+	# remove docker containers exited 
+	-docker rm $$(docker ps -qa --no-trunc --filter "status=exited") 
+	#volumes
+	-docker network ls | grep "bridge" 
+	-docker network rm $$(docker network ls | grep "bridge" | awk '/ / { print $$1 }')
+	#
+	docker network ls
+	docker volume ls 
+	docker images
+	docker ps -a
+	docker ps 
+  
+
+# clean all superst docker containers and everything.. 
+#
+cleanall:   
+	# remove this one.. 
+	#-docker rmi dkr382r-django_djangodev
+	#
+  #kill these...
+	# docker kill $$(docker ps -a |    grep 394super         | awk '{print $$1}')
+	#remove these...
 	-docker rm -f $$(docker ps -a |  grep mysql_     | awk '{print $$1}')
 	-docker rm -f $$(docker ps -a |  grep sqlite_     | awk '{print $$1}')
 	-docker rm -f $$(docker ps -a |  grep 394sup     | awk '{print $$1}')
@@ -54,22 +87,21 @@ clean2:
 	docker ps -a
 	docker ps 
 
-
+  
 
 #
 clean:   
 	# remove this one.. 
 	#-docker rmi dkr382django2t_djangodev 
-	#-docker rmi dkr382r-django_djangodev
 	#
 	# remove docker containers exited 
 	-docker rm $$(docker ps -qa --no-trunc --filter "status=exited") 
 	# remove tagged <none> 
-	-docker rmi $$(docker images | grep "^<none>" | awk '{ print $3 }') 
+	-docker rmi $$(docker images | grep "^<none>" | awk '{ print $$3 }') 
 	#volumes
 	-docker volume rm $$(docker volume ls -qf dangling=true)
 	-docker network ls | grep "bridge"	 
-	-docker network rm $$(docker network ls | grep "bridge" | awk '/ / { print $1 }')
+	-docker network rm $$(docker network ls | grep "bridge" | awk '/ / { print $$1 }')
 	#
 	docker network ls
 	docker volume ls 
@@ -190,11 +222,6 @@ recreatep:
 rup:  
 # dev recreate build force
 	docker-compose  up --build  --force-recreate  
- 
-up:  
-# dev recreate build force
-	docker-compose  up 
-
  
   
 
