@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -e
+set -evx
+
+export MAPBOX_API_KEY=dg1
 
 if [ -z $1 ]; then
   echo "Usage: bash demo.sh mysql|postgres|sqlite|celery"
@@ -21,12 +23,12 @@ elif [ "$1" == "mysql" ] || [ "$1" == "postgres" ]; then
   echo "Starting redis & $1 services..."
   docker-compose up -d redis $1
   echo "Sleeping for 30s"
-  sleep 30
+  sleep 31
 else
   echo "Starting redis & postgres services..."
   docker-compose up -d redis postgres
   echo "Sleeping for 30s"
-  sleep 30
+  sleep 32
 fi
 
 # Start Superset
@@ -37,10 +39,11 @@ if [ "$1" == "celery" ]; then
   docker-compose up -d worker
 fi
 echo "Sleeping for 30s"
-sleep 30
+sleep 33
 
 # Inititalize Demo
 docker-compose exec superset superset-demo
+
 
 echo "Navigate to http://localhost:8088 to view demo"
 echo -n "Press RETURN to bring down demo"
