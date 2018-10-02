@@ -24,11 +24,21 @@ echo "Sleeping for 30s"
 # sleep 33
 timeout1=33 ; read -t "${timeout1}" -p "Press ENTER or wait $timeout1 seconds..." || true ;  echo ;
 
+
 # Inititalize Demo
-docker-compose exec superset superset-demo
+# docker-compose exec superset superset-demo
+if [ -f .demoinitialized ]; then
+    #file exists, so don't run this again. exit.
+    echo
+    echo "init has run before, don't run again."
+    echo
+    read -t  19 -p "Hit ENTER or wait about ten seconds" ; echo ;
+else
+    echo "run it... "
+    # create file to mark that is has been run. Then don't run it again.
+    touch .demoinitialized
+    docker-compose exec superset superset-demo
+fi
 
 
-echo "Navigate to http://localhost:8088 to view demo"
-echo -n "Press RETURN to bring down demo"
-read down
-docker-compose down -v
+echo "Navigate to http://localhost:6161 to view demo. Sub in your hostname instead of localhost"

@@ -9,8 +9,12 @@ ss:
 sush:
 	docker-compose  exec  --user root superset /bin/bash
   
-dn:
+dwn:
+  # CAREFUL  --  removes containers and volumes etc.
 	docker-compose down -v
+
+kl:
+	docker kill $$(docker ps -a |    grep 394superset         | awk '{print $$1}')
 
 adm:
 	docker-compose up adminer
@@ -24,7 +28,7 @@ clean2:
 	#-docker rmi dkr382r-django_djangodev
 	#
   #kill these...
-	# docker kill $(docker ps -a |    grep 394super         | awk '{print $1}')
+	# docker kill $$(docker ps -a |    grep 394super         | awk '{print $$1}')
 	#remove these...
 	-docker rm -f $$(docker ps -a |  grep full     | awk '{print $$1}')
 	-docker rm -f $$(docker ps -a |  grep mysql_     | awk '{print $$1}')
@@ -36,13 +40,13 @@ clean2:
 	-docker images | grep 563a026a151 | awk '{print $$1 ":" $$2}' | xargs docker rmi 
  	#
 	# remove tagged <none> 
-	-docker rmi $$(docker images | grep "^<none>" | awk '{ print $3 }') 
+	-docker rmi $$(docker images | grep "^<none>" | awk '{ print $$3 }') 
 	# remove docker containers exited 
 	-docker rm $$(docker ps -qa --no-trunc --filter "status=exited") 
 	#volumes
 	-docker volume rm $$(docker volume ls -qf dangling=true)
 	-docker network ls | grep "bridge" 
-	-docker network rm $$(docker network ls | grep "bridge" | awk '/ / { print $1 }')
+	-docker network rm $$(docker network ls | grep "bridge" | awk '/ / { print $$1 }')
 	#
 	docker network ls
 	docker volume ls 
