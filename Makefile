@@ -3,7 +3,75 @@
 # run scripts from project folder like this --  sc/cl
 
 
+ss:
+	bash demo.sh mysql
+
   
+  
+# clean docker containers 
+#
+clean2:   
+	# remove this one.. 
+	#-docker rmi dkr382django2t_djangodev 
+	#-docker rmi dkr382r-django_djangodev
+	#
+	#remove these...
+	-docker rm -f $(docker ps -a |  grep full     | awk '{print $1}')
+	-docker rm -f $(docker ps -a |  grep mysql_     | awk '{print $1}')
+	-docker rm -f $(docker ps -a |  grep sqlite_     | awk '{print $1}')
+	#
+	-docker images | grep redis | awk '{print $$1 ":" $$2}' | xargs docker rmi 
+	-docker images | grep superset | awk '{print $$1 ":" $$2}' | xargs docker rmi 
+	-docker images | grep 563a026a151 | awk '{print $$1 ":" $$2}' | xargs docker rmi 
+ 	#
+	# remove tagged <none> 
+	-docker rmi $$(docker images | grep "^<none>" | awk '{ print $3 }') 
+	# remove docker containers exited 
+	-docker rm $$(docker ps -qa --no-trunc --filter "status=exited") 
+	#volumes
+	-docker volume rm $$(docker volume ls -qf dangling=true)
+	-docker network ls | grep "bridge" 
+	-docker network rm $$(docker network ls | grep "bridge" | awk '/ / { print $1 }')
+	#
+	docker network ls
+	docker volume ls 
+	docker images
+	docker ps -a
+	docker ps 
+
+
+
+#
+clean:   
+	# remove this one.. 
+	#-docker rmi dkr382django2t_djangodev 
+	#-docker rmi dkr382r-django_djangodev
+	#
+	# remove docker containers exited 
+	-docker rm $$(docker ps -qa --no-trunc --filter "status=exited") 
+	# remove tagged <none> 
+	-docker rmi $$(docker images | grep "^<none>" | awk '{ print $3 }') 
+	#volumes
+	-docker volume rm $$(docker volume ls -qf dangling=true)
+	-docker network ls | grep "bridge"	 
+	-docker network rm $$(docker network ls | grep "bridge" | awk '/ / { print $1 }')
+	#
+	docker network ls
+	docker volume ls 
+	docker images
+	docker ps -a
+	docker ps 
+
+ 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+#	other/`less common` stuff...
+
+
+
+
 mysh:
 	docker-compose  -f docker-compose.yml exec dbm /bin/bash
 
@@ -18,13 +86,6 @@ myimpa:
 
 	
 	
- 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
-#  other/`less common` stuff...
-
 
 
 mydumpb:
@@ -87,26 +148,6 @@ dps:
 	docker ps 
 
   
-# clean docker containers 
-#
-clean:   
-	# remove this one.. 
-	#-docker rmi dkr382django2t_djangodev 
-	#-docker rmi dkr382r-django_djangodev
-  # remove docker containers exited 
-	-docker rm $$(docker ps -qa --no-trunc --filter "status=exited") 
-	# remove tagged <none> 
-	-docker rmi $$(docker images | grep "^<none>" | awk '{ print $3 }') 
-  #volumes
-	-docker volume rm $$(docker volume ls -qf dangling=true)
-	-docker network ls | grep "bridge"   
-	-docker network rm $$(docker network ls | grep "bridge" | awk '/ / { print $1 }')
-	#
-	docker images
-	docker network ls
-	docker volume ls 
-	docker ps -a
-	docker ps 
 
 
 #
@@ -141,9 +182,15 @@ up:
 
  
   
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# TIPS.
 
 # https://github.com/docker/compose/issues/2033 docker compose command line run sh multiple commands in one line
 # $ requires escaping with $, so, $$
 # continuation card  \
 # - dash in front of command ignores error. -rm -f *.o
+
+# powder97
+
+#
