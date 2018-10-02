@@ -4,10 +4,18 @@
 
 
 ss:
-	bash demo.sh mysql
+	bash start.sh
 
+sush:
+	docker-compose  exec  --user root superset /bin/bash
   
-  
+dn:
+	docker-compose down -v
+
+adm:
+	docker-compose up adminer
+ 
+ 
 # clean docker containers 
 #
 clean2:   
@@ -15,10 +23,13 @@ clean2:
 	#-docker rmi dkr382django2t_djangodev 
 	#-docker rmi dkr382r-django_djangodev
 	#
+  #kill these...
+	# docker kill $(docker ps -a |    grep 394super         | awk '{print $1}')
 	#remove these...
-	-docker rm -f $(docker ps -a |  grep full     | awk '{print $1}')
-	-docker rm -f $(docker ps -a |  grep mysql_     | awk '{print $1}')
-	-docker rm -f $(docker ps -a |  grep sqlite_     | awk '{print $1}')
+	-docker rm -f $$(docker ps -a |  grep full     | awk '{print $$1}')
+	-docker rm -f $$(docker ps -a |  grep mysql_     | awk '{print $$1}')
+	-docker rm -f $$(docker ps -a |  grep sqlite_     | awk '{print $$1}')
+	-docker rm -f $$(docker ps -a |  grep 394sup     | awk '{print $$1}')
 	#
 	-docker images | grep redis | awk '{print $$1 ":" $$2}' | xargs docker rmi 
 	-docker images | grep superset | awk '{print $$1 ":" $$2}' | xargs docker rmi 
