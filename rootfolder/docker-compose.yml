@@ -1,0 +1,56 @@
+version: '3.6'
+
+services:
+
+  superset:
+    build:
+      context: .
+      args:
+        SUPERSET_VERSION: 0.27.0
+    image: amancevice/superset
+    ports:
+      - 6161:8088
+    networks:
+      - sister
+    restart: always
+    depends_on:
+      - redis
+      - mysql
+    environment:
+      MAPBOX_API_KEY: ${MAPBOX_API_KEY}
+    ports:
+      - "6161:8088"
+    volumes:
+      - ./superset_config.py:/etc/superset/superset_config.py
+
+      
+  mysql:
+    image: mysql:5.7.22
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: superset
+      MYSQL_USER: superset
+      MYSQL_PASSWORD: superset
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - sister 
+      
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - redis:/data
+      
+networks:
+  sister:
+    name: sister
+      external:true
+           
+volumes:
+  redis:
+    external: false
+  mysql:
+    external: false
+           
