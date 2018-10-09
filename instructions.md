@@ -1,10 +1,20 @@
 
+# This is part of a system of dockerized apps
+
+See this repo to see the ideas used in this system.
+
+https://github.com/dgleba/392dkr/blob/master/README.md
+
+Check the bash aliases and Makefile that are used for common tasks.
+
+
+
+
 # Start it
 
 Use alias `dkup`
 
 See Bash aliases note below..
-
 
 
 
